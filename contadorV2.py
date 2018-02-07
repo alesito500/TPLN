@@ -1,4 +1,4 @@
-print("Este es el archivo original que no voy a tocar")
+# Este es el archovo del master en mi compu
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.
