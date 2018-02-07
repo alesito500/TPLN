@@ -1,3 +1,4 @@
+print("pablo modificó este archivo")
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.
