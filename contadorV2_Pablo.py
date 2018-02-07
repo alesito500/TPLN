@@ -1,7 +1,4 @@
 print("Este es mi archivo que voy a trabajar")
->>>>>>> master:contadorV2.py
-=======
->>>>>>> parent of 18752d2... Este es mi nuevo archivo:contadorV2.py
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.
