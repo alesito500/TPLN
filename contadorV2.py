@@ -1,11 +1,4 @@
-<<<<<<< HEAD:contadorV2_Pablo.py
-<<<<<<< HEAD:contadorV2_Pablo.py
-#Código Pablo 
-=======
-print("pablo modificó este archivo")
->>>>>>> master:contadorV2.py
-=======
->>>>>>> parent of 18752d2... Este es mi nuevo archivo:contadorV2.py
+print("Este es el archivo original que no voy a tocar")
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.

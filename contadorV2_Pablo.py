@@ -1,8 +1,4 @@
-<<<<<<< HEAD:contadorV2_Pablo.py
-<<<<<<< HEAD:contadorV2_Pablo.py
-#Código Pablo 
-=======
-print("pablo modificó este archivo")
+print("Este es mi archivo que voy a trabajar")
 >>>>>>> master:contadorV2.py
 =======
 >>>>>>> parent of 18752d2... Este es mi nuevo archivo:contadorV2.py
