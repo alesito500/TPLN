@@ -1,4 +1,8 @@
+<<<<<<< HEAD:contadorV2_Pablo.py
 #Código Pablo 
+=======
+print("pablo modificó este archivo")
+>>>>>>> master:contadorV2.py
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.
