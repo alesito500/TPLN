@@ -1,4 +1,4 @@
-# Este es el archovo del master en mi compu
+# Este es el archivo del master en mi compu y le hice un cambio y quiero que aparezca en el master
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.
