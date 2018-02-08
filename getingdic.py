@@ -1,4 +1,4 @@
-import os, fnmatch, nltk
+import os, fnmatch, nltk, re
 
 from xml.parsers import expat
 class Element(object):
@@ -105,3 +105,18 @@ def loadBags(bag):
         else:
             types[token] = 1
     return types
+
+# Name: janitor
+# Goal: Take of urls and emails from the given dictionary
+def janitor(dcy):
+    urls = re.compile(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)')
+    mails = re.compile(r'[^@]+@[^@]+\.[^@]+')
+    for llave in dcy.keys():
+        print "INTO JANITOR LOOP ", llave
+        if re.match(urls, llave):
+            print "URL FOUND ", llave
+            del dcy[llave]
+        elif re.match(mails, llave):
+            print "MAIL FOUND ", llave
+            del dcy[llave]
+    return dcy

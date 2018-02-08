@@ -50,7 +50,7 @@ def all_files(root, patterns ='*', single_level = False, yield_folders = False):
 def getBagofWords(archivos):
     palabras = ''
     # full_tokens es una variable para escribir en un archivo la informacion: usuario [publicaciones]
-    full_tokens = open('demo_ax.tsv', 'a')
+    full_tokens = open('demo_dp.tsv', 'a')
     # En este ciclo se va a leer cada xml dentro de la lista de entrada
     for xml in archivos:
         # Por cada xml va a organizar una cadena (string) con el formato: usuario [publicaciones]
@@ -159,37 +159,39 @@ anorexia_pos = list(all_files('../Corpus/TrainingCorpus_eRisk_2018/task2/eRisk 2
 anorexia_neg = list(all_files('../Corpus/TrainingCorpus_eRisk_2018/task2/eRisk 2018 - train/negative_examples', '*.xml'))
 depresion_neg = list(all_files('../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/negative_examples_anonymous_chunks', '*.xml'))
 depresion_pos = list(all_files('../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/positive_examples_anonymous_chunks', '*.xml'))
-print "Analisys Anorexia"
-print "Analisys ANOREXIA positivo"
+# print "Analisys Anorexia"
+# print "Analisys ANOREXIA positivo"
 # Extraccion de la bolsa de palabras y del diccionario para axp
-flag = '1'
-bag = loadBags(getBagofWords(anorexia_pos), 'axp')
+# flag = '1'
+# bag = loadBags(getBagofWords(anorexia_pos), 'axp')
 # Extraccion del diccionario para ax
 # loadBags(bag, 'ax')
-print "Number of tokens: ", len(bag)
-print "Number of types: ", len(types.get('axp'))
-print "Analisys ANOREXIA negativo"
+# print "Number of tokens: ", len(bag)
+# print "Number of types: ", len(types.get('axp'))
+# print "Analisys ANOREXIA negativo"
 # Extraccion de la bolsa de palabras y del diccionario para axn
-flag = '0'
-bag = loadBags(getBagofWords(anorexia_neg), 'axn')
+# flag = '0'
+# bag = loadBags(getBagofWords(anorexia_neg), 'axn')
 # Actualizacion del diccionario de ax
 # loadBags(bag, 'ax')
-print "Number of tokens: ", len(bag)
-print "Number of types: ", len(types.get('axn'))
+# print "Number of tokens: ", len(bag)
+# print "Number of types: ", len(types.get('axn'))
 
 # print "Number of global types: ", len(types.get('ax'))
 
-# print "Analisys DEPRESION"
-# print "Analisys DEPRESION positivo"
-# bag = loadBags(getBagofWords(depresion_pos), 'dpp')
+print "Analisys DEPRESION"
+print "Analisys DEPRESION positivo"
+flag = '1'
+bag = loadBags(getBagofWords(depresion_pos), 'dpp')
 # loadBags(bag, 'dp')
-# print "Number of tokens: ", len(bag)
-# print "Number of types: ", len(types.get('dpp'))
-#
-# print "Analisys DEPRESION negativo"
-# bag = loadBags(getBagofWords(depresion_neg), 'dpn')
+print "Number of tokens: ", len(bag)
+print "Number of types: ", len(types.get('dpp'))
+
+print "Analisys DEPRESION negativo"
+flag = '0'
+bag = loadBags(getBagofWords(depresion_neg), 'dpn')
 # loadBags(bag, 'dp')
-# print "Number of tokens: ", len(bag)
-# print "Number of types: ", len(types.get('dpn'))
+print "Number of tokens: ", len(bag)
+print "Number of types: ", len(types.get('dpn'))
 #
 # print "Number of global types: ", len(types.get('dp'))
