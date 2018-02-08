@@ -1,4 +1,3 @@
-print("Este es el archivo original que no voy a tocar")
 import os, fnmatch, nltk
 
 # types es el diccionario base en el que se van a guardar las bolsas de palabras.
@@ -11,6 +10,7 @@ import os, fnmatch, nltk
 # dp => Depresion
 
 types = {'axp':{},'axn':{},'dpp':{},'dpn':{},'ax':{}, 'dp':{}}
+flag = ''
 
 # Nombre: all_files
 # Objetivo:
@@ -49,8 +49,8 @@ def all_files(root, patterns ='*', single_level = False, yield_folders = False):
 #     tokens => Bolsa de palabras extraida de los archivos analizados
 def getBagofWords(archivos):
     palabras = ''
-    # full_tokens es una variable para escribir en un archivo la información: usuario [publicaciones]
-    full_tokens = open('tokens_en_linea/tokens_en_linea_x', 'a')
+    # full_tokens es una variable para escribir en un archivo la informacion: usuario [publicaciones]
+    full_tokens = open('demo_ax.tsv', 'a')
     # En este ciclo se va a leer cada xml dentro de la lista de entrada
     for xml in archivos:
         # Por cada xml va a organizar una cadena (string) con el formato: usuario [publicaciones]
@@ -59,14 +59,14 @@ def getBagofWords(archivos):
         root_element = parser.Parse(xml)
         # Extraccion del ID
         for ids in root_element.getElements('ID'):
-            usuario_linea = ids.getData()
+            usuario_linea = ids.getData() + '\t' + flag
         # Extraccion de las publicaciones
         for escrito in root_element.getElements('WRITING'):
             for texto in escrito.getElements('TEXT'):
                 # Concatenacion global de los textos
                 palabras = palabras + texto.getData()
                 # Concatenacion por usuario
-                usuario_linea = usuario_linea + texto.getData()
+                usuario_linea = usuario_linea + '\t' + texto.getData()
         # Vaciado de las publicaciones por usuario
         full_tokens.write(usuario_linea + "\n")
     full_tokens.close()
@@ -162,32 +162,34 @@ depresion_pos = list(all_files('../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 
 print "Analisys Anorexia"
 print "Analisys ANOREXIA positivo"
 # Extraccion de la bolsa de palabras y del diccionario para axp
+flag = '1'
 bag = loadBags(getBagofWords(anorexia_pos), 'axp')
 # Extraccion del diccionario para ax
-loadBags(bag, 'ax')
+# loadBags(bag, 'ax')
 print "Number of tokens: ", len(bag)
 print "Number of types: ", len(types.get('axp'))
 print "Analisys ANOREXIA negativo"
 # Extraccion de la bolsa de palabras y del diccionario para axn
+flag = '0'
 bag = loadBags(getBagofWords(anorexia_neg), 'axn')
 # Actualizacion del diccionario de ax
-loadBags(bag, 'ax')
+# loadBags(bag, 'ax')
 print "Number of tokens: ", len(bag)
 print "Number of types: ", len(types.get('axn'))
 
-print "Number of global types: ", len(types.get('ax'))
+# print "Number of global types: ", len(types.get('ax'))
 
-print "Analisys DEPRESION"
-print "Analisys DEPRESION positivo"
-bag = loadBags(getBagofWords(depresion_pos), 'dpp')
-loadBags(bag, 'dp')
-print "Number of tokens: ", len(bag)
-print "Number of types: ", len(types.get('dpp'))
-
-print "Analisys DEPRESION negativo"
-bag = loadBags(getBagofWords(depresion_neg), 'dpn')
-loadBags(bag, 'dp')
-print "Number of tokens: ", len(bag)
-print "Number of types: ", len(types.get('dpn'))
-
-print "Number of global types: ", len(types.get('dp'))
+# print "Analisys DEPRESION"
+# print "Analisys DEPRESION positivo"
+# bag = loadBags(getBagofWords(depresion_pos), 'dpp')
+# loadBags(bag, 'dp')
+# print "Number of tokens: ", len(bag)
+# print "Number of types: ", len(types.get('dpp'))
+#
+# print "Analisys DEPRESION negativo"
+# bag = loadBags(getBagofWords(depresion_neg), 'dpn')
+# loadBags(bag, 'dp')
+# print "Number of tokens: ", len(bag)
+# print "Number of types: ", len(types.get('dpn'))
+#
+# print "Number of global types: ", len(types.get('dp'))
