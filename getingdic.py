@@ -1,5 +1,6 @@
 import os, fnmatch, nltk, re
 
+
 from xml.parsers import expat
 class Element(object):
     ''' A parsed XML element '''
@@ -74,27 +75,66 @@ def all_files(root, patterns ='*', single_level = False, yield_folders = False):
                     break
         if single_level:
             break
+
+# Name: lineUpPost
+# Goal: Imprimir un archivo tsv con los valores de
+#     id de usuario, problema y posts en una sola linea
+def lineUpPost( archivos, flag=0, filename='posts.tsv'):
+    full_tokens = open(filename, 'a')
+    # En este ciclo se va a leer cada xml dentro de la lista de entrada
+    for xml in archivos:
+        # Por cada xml va a organizar una cadena (string) con el formato: usuario [publicaciones]
+        usuario_linea = ''
+        # Analisis XML del archivo
+        root_element = parser.Parse(xml)
+        # Extraccion del ID
+        for ids in root_element.getElements('ID'):
+            usuario_linea = ids.getData() + '\t' + flag
+        # Extraccion de las publicaciones
+        for escrito in root_element.getElements('WRITING'):
+            for texto in escrito.getElements('TEXT'):
+                # Concatenacion por usuario
+                usuario_linea = usuario_linea + '\t' + texto.getData()
+        # Vaciado de las publicaciones por usuario
+        full_tokens.write(usuario_linea + "\n")
+    full_tokens.close()
+
+
 # Name: getBagofWords
 # Goal: Tokenize a list of xml files
 def getBagofWords(archivos):
     palabras = ''
-    full_tokens = open('tokens_en_linea/tokens_en_linea_x', 'a')
     for xml in archivos:
         usuario_linea = ''
         root_element = parser.Parse(xml)
-        for ids in root_element.getElements('ID'):
-            usuario_linea = ids.getData()
         for escrito in root_element.getElements('WRITING'):
             #Obtengo los elementos de la altura jerarquica de ID y WRITING
             for texto in escrito.getElements('TEXT'):
                 #Obtengo los posts
                 palabras = palabras + texto.getData()
-                usuario_linea = usuario_linea + texto.getData()
-        full_tokens.write(usuario_linea + "\n")
-    full_tokens.close()
     tokens = nltk.word_tokenize(palabras)
     return tokens
 
+from nltk.corpus import stopwords
+# Name: getCleanBagofWords
+# Goal: Tokenize a list of xml files
+def getCleanBagofWords(archivos):
+    palabras = ''
+    for xml in archivos:
+        usuario_linea = ''
+        root_element = parser.Parse(xml)
+        for escrito in root_element.getElements('WRITING'):
+            #Obtengo los elementos de la altura jerarquica de ID y WRITING
+            for texto in escrito.getElements('TEXT'):
+                #Obtengo los posts
+                palabras = palabras + texto.getData()
+    tokens = nltk.word_tokenize(palabras)
+    sw = set(stopwords.words('english'))
+    cleanTokens = []
+    for t in tokens:
+        if t not in sw:
+            cleanTokens.append(t)
+    return cleanTokens
 # Name: loadBags
 # Goal: Load as dictionary a bag of tokens {type: ti}
 def loadBags(bag):
