@@ -17,10 +17,7 @@ def getWORDS():
     patron2 = re.compile(r'%')
     for line in dic_path.readlines():
         if not re.match(patron1,line) and not re.match(patron2, line):
-            print line
-            # ac = line.split('\t')
-            # dic[ac.pop(0)] = ac
-        cat = cat + 1
+            ac = line.split('\t')
+            ac[-1] = ac[-1].replace('\n','')
+            dic[ac.pop(0)] = ac
     return dic
-
-getWORDS()
