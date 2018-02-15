@@ -20,8 +20,13 @@ chunks_axp = []
 def loadchunkXML(clase):
     for i in range(1,11):
         chunks_axp.append(list(getingdic.all_files(pb[clase]+'/chunk'+str(i), '*.xml')))
-def analyzeChunk(clase, chunk=0):
+def analyzeChunk(clase, chunk=1):
     types[clase]['chunk'+str(chunk)] = getingdic.inlinePost(chunks_axp[chunk])
 
 loadchunkXML('axp')
 analyzeChunk('axp')
+
+from sklearn.feature_extraction.text import CountVectorizer
+vect = CountVectorizer()
+CH1 = vect.fit_transform(types['axp']['chunk1'])
+print(CH1)
