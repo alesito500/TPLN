@@ -1,64 +1,6 @@
 import os, fnmatch, nltk, re
+import xml.etree.ElementTree as ET
 
-
-from xml.parsers import expat
-class Element(object):
-    ''' A parsed XML element '''
-    def __init__(self, name, attributes):
-        # Record tagname and attributes dictionary
-        self.name = name
-        self.attributes = attributes
-        # Initialize the element's cdata and children to empty
-        self.cdata = ''
-        self.children = [ ]
-    def addChild(self, element):
-        self.children.append(element)
-    def getAttribute(self, key):
-        return self.attributes.get(key)
-    def getData(self):
-        return self.cdata
-    def getElements(self, name=''):
-        if name:
-            return [c for c in self.children if c.name == name]
-        else:
-            return list(self.children)
-class Xml2Obj(object):
-    ''' XML to Object converter '''
-    def __init__(self):
-        self.root = None
-        self.nodeStack = [ ]
-    def StartElement(self, name, attributes):
-        'Expat start element event handler'
-        # Instantiate an Element object
-        element = Element(name.encode( ), attributes)
-        # Push element onto the stack and make it a child of parent
-        if self.nodeStack:
-            parent = self.nodeStack[-1]
-            parent.addChild(element)
-        else:
-            self.root = element
-        self.nodeStack.append(element)
-    def EndElement(self, name):
-        'Expat end element event handler'
-        self.nodeStack.pop( )
-    def CharacterData(self, data):
-        'Expat character data event handler'
-        if data.strip( ):
-            data = data.encode('ascii', 'ignore')
-            element = self.nodeStack[-1]
-            element.cdata += data
-    def Parse(self, filename):
-        # Create an Expat parser
-        Parser = expat.ParserCreate( )
-        # Set the Expat event handlers to our methods
-        Parser.StartElementHandler = self.StartElement
-        Parser.EndElementHandler = self.EndElement
-        Parser.CharacterDataHandler = self.CharacterData
-        # Parse the XML File
-        ParserStatus = Parser.Parse(open(filename).read( ), 1)
-        return self.root
-
-parser = Xml2Obj( )
 # Name: all_files
 # Goal: Get a list with the paths of all xml files in a given root
 def all_files(root, patterns ='*', single_level = False, yield_folders = False):
@@ -86,15 +28,15 @@ def lineUpPost( archivos, flag=0, filename='posts.tsv'):
         # Por cada xml va a organizar una cadena (string) con el formato: usuario [publicaciones]
         usuario_linea = ''
         # Analisis XML del archivo
-        root_element = parser.Parse(xml)
+        tree = ET.parse(xml)
+        root_element = tree.getroot()
         # Extraccion del ID
-        for ids in root_element.getElements('ID'):
-            usuario_linea = ids.getData() + '\t' + flag
+        for ids in root_element.iter('ID'):
+            usuario_linea = ids.text + '\t' + flag
         # Extraccion de las publicaciones
-        for escrito in root_element.getElements('WRITING'):
-            for texto in escrito.getElements('TEXT'):
-                # Concatenacion por usuario
-                usuario_linea = usuario_linea + '\t' + texto.getData()
+        for texto in root_element.iter('TEXT'):
+            # Concatenacion por usuario
+            usuario_linea = usuario_linea + '\t' + texto.text
         # Vaciado de las publicaciones por usuario
         full_tokens.write(usuario_linea + "\n")
     full_tokens.close()
@@ -106,12 +48,11 @@ def getBagofWords(archivos):
     palabras = ''
     for xml in archivos:
         usuario_linea = ''
-        root_element = parser.Parse(xml)
-        for escrito in root_element.getElements('WRITING'):
-            #Obtengo los elementos de la altura jerarquica de ID y WRITING
-            for texto in escrito.getElements('TEXT'):
-                #Obtengo los posts
-                palabras = palabras + texto.getData()
+        tree = ET.parse(xml)
+        root_element = tree.getroot()
+        for texto in root_element.iter('TEXT'):
+            #Obtengo los posts
+            palabras = palabras + texto.text
     tokens = nltk.word_tokenize(palabras)
     return tokens
 
@@ -122,12 +63,11 @@ def getCleanBagofWords(archivos):
     palabras = ''
     for xml in archivos:
         usuario_linea = ''
-        root_element = parser.Parse(xml)
-        for escrito in root_element.getElements('WRITING'):
-            #Obtengo los elementos de la altura jerarquica de ID y WRITING
-            for texto in escrito.getElements('TEXT'):
-                #Obtengo los posts
-                palabras = palabras + texto.getData()
+        tree = ET.parse(xml)
+        root_element = tree.getroot()
+        for texto in root_element.iter('TEXT'):
+            #Obtengo los posts
+            palabras = palabras + texto.text
     tokens = nltk.word_tokenize(palabras)
     sw = set(stopwords.words('english'))
     cleanTokens = []
@@ -160,3 +100,23 @@ def janitor(dcy):
             # print "MAIL FOUND ", llave
             del dcy[llave]
     return dcy
+
+# Name: lineUpPost
+# Goal: Imprimir un archivo tsv con los valores de
+#     id de usuario, problema y posts en una sola linea
+def inlinePost( archivos):
+    full_tokens = []
+    # En este ciclo se va a leer cada xml dentro de la lista de entrada
+    for xml in archivos:
+        # Por cada xml va a organizar una cadena (string) con el formato: usuario [publicaciones]
+        usuario_linea = ''
+        # Analisis XML del archivo
+        tree = ET.parse(xml)
+        root_element = tree.getroot()
+        # Extraccion de las publicaciones
+        for texto in root_element.iter('TEXT'):
+                # Concatenacion por usuario
+                usuario_linea = usuario_linea + ' ' + texto.text
+        # Vaciado de las publicaciones por usuario
+        full_tokens.append(usuario_linea)
+    return full_tokens
