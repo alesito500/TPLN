@@ -36,12 +36,17 @@ chunks_axp = []
 def loadchunkXML(clase):
     for i in range(1,11):
         chunks_axp.append(list(getingdic.all_files(pb[clase]+'/chunk'+str(i), '*.xml')))
+
 def analyzeChunk(clase, chunk=0):
-    types[clase] = getingdic.inlinePost(chunks_axp[chunk])
+    types[clase][chunk] = getingdic.loadBags(getingdic.getCleanBagofWords(chunks_axp[chunk]))
+    types[clase][chunk] = getingdic.janitor(types[clase][chunk])
 
 loadchunkXML('axp')
-analyzeChunk('axp')
+for i in range(10):
+    analyzeChunk('axp', i)
 print(len(types['axp']))
 print(type(types['axp']))
+for llave in types['axp'].keys():
+    print(llave, len(types['axp'][llave]))
 # for row in types['axp']:
 #     print(row)
