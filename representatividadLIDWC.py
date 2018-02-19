@@ -23,17 +23,24 @@ for token in GD.types['axp']['chunk1']:
         for i in lidwc[token]:
             lidwc_cats[i] = lidwc_cats[i] + 1
 
+for i in lidwc_cats.keys():
+    lidwc_cats[i] = 0
+
+
 fo = 0
 for llave in lidwc.keys():
     p = re.compile(llave, re.IGNORECASE)
-    for token in GD.types['axp']['chunk1']:
+    for token in GD.types['axp']['chunk5']:
         if re.match(p,token):
-            print('Match: ', token, llave)
+            # print('Match: ', token, llave)
             fo = fo + 1
             for i in lidwc[llave]:
                 lidwc_cats[i] = lidwc_cats[i] + 1
 
 
+for i in lidwc_cats.keys():
+    print(i,'\t', lidwc_cats[i])
 
-pr = fo / len(GD.types['axp']['chunk1'])
-print('Tokens en chunk1: ', len(GD.types['axp']['chunk1']), 'Tokens en Liwc: ', str(fo), 'Representatividad: ', str(pr))
+
+pr = fo / len(GD.types['axp']['chunk5'])
+print('Tokens en chunk5:\t', len(GD.types['axp']['chunk5']), '\nCoincidencias en Liwc:\t', str(fo), '\nRepresentatividad:\t', str(pr))
