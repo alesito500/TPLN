@@ -14,8 +14,8 @@ types = {
 pb = {
 'axp': '../Corpus/TrainingCorpus_eRisk_2018/task2/eRisk 2018 - train/positive_examples',
 'axn': '../Corpus/TrainingCorpus_eRisk_2018/task2/eRisk 2018 - train/negative_examples',
-'dpp': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/negative_examples_anonymous_chunks',
-'dpn': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/positive_examples_anonymous_chunks'
+'dpp': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/positive_examples_anonymous_chunks',
+'dpn': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/negative_examples_anonymous_chunks'
 }
 # Arreglo de chunks
 chunks_paths = []
@@ -49,6 +49,7 @@ def loadchunkXML(clase):
         chunks_paths.append(list(all_files(pb[clase]+'/chunk'+str(i), '*.xml')))
 
 # ***Zona de análisis de los textos***
+# ------TOKENS------
 # Name: getBagofWords
 # Goal: Tokenize a list of xml files
 def getBagofWords(archivos):
@@ -67,9 +68,15 @@ def getBagofWords(archivos):
 # Goal: Tokenize a list of xml files
 def getCleanBagofWords(archivos):
     palabras = ''
-    for xml in archivos:
-        usuario_linea = ''
-        tree = ET.parse(xml)
+    if(isinstance(archivos, list)):
+        for xml in archivos:
+            tree = ET.parse(xml)
+            root_element = tree.getroot()
+            for texto in root_element.iter('TEXT'):
+                #Obtengo los posts
+                palabras = palabras + texto.text
+    elif(isinstance(archivos,str)):
+        tree = ET.parse(archivos)
         root_element = tree.getroot()
         for texto in root_element.iter('TEXT'):
             #Obtengo los posts
@@ -82,6 +89,7 @@ def getCleanBagofWords(archivos):
             cleanTokens.append(t)
     return cleanTokens
 
+# ---------TYPES----------------
 # Name: loadBags
 # Goal: Load as dictionary a bag of tokens {type: ti}
 def loadBags(bag):

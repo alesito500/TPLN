@@ -23,7 +23,5 @@ def getWORDS():
             ac[0] = ac[0].replace('*', '.*')
             ac[0] = ac[0].replace('\'', '\\\'')
             dic[ac.pop(0)] = ac
-        else:
-            print('Line didn\'t match: ', line)
     dic_path.close()
     return dic
