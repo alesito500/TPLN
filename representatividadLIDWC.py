@@ -78,11 +78,11 @@ def parseForTypes(ch):
     return fo
 
 
-print('Cargando los chuncks\t.\t-\t\\\t|\t/\t-\t.\t1<=>7\n')
+print('Cargando los chuncks\t.\t-\t\\\t|\t/\t-\t.\t1<=>3\n')
 GD.loadchunkXML('dpn')
-print('Cargando los diccionarios\t.\t-\t\\\t|\t/\t-\t.\t2<=>7\n')
+print('Cargando los diccionarios\t.\t-\t\\\t|\t/\t-\t.\t2<=>3\n')
 loaddictionary()
-print('Analizando los tipos:\t.\t-\t\\\t|\t/\t-\t.\t3<=>7\n')
+print('Analizando los tipos:\t.\t-\t\\\t|\t/\t-\t.\t3<=>3\n')
 print('Chunk\tMatches\tTipos\ttokens')
 for ch in range(1,11):
     fo = parseForTypes(ch)
