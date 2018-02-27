@@ -48,7 +48,7 @@ def loadchunkXML(clase):
     for i in range(1,11):
         chunks_paths.append(list(all_files(pb[clase]+'/chunk'+str(i), '*.xml')))
 
-# ***Zona de análisis de los textos***
+# ***Zona de analisis de los textos***
 # ------TOKENS------
 # Name: getBagofWords
 # Goal: Tokenize a list of xml files
@@ -132,6 +132,35 @@ def janitor_array(dcy):
             del dcy[c]
         c = c + 1
     return dcy
+
+
+# Name: forUserAnalysis
+# Goal: realizar el analisis de tipos y tokens por usuario.
+def forUserAnalysis(xml):
+    tree = ET.parse(xml)
+    root_element = tree.getroot()
+    user_node = root_element.findall('ID')
+    if len(user_node) == 1:
+        usuario = user_node[0].text
+    else:
+        usuario = 'unkown_user'
+    tokens = getCleanBagofWords(xml)
+    types = loadBags(janitor_array(tokens))
+    return str(usuario)+'\t'+str(len(types))+'\t'+str(len(tokens))
+
+# Name: typesforUser
+# Goal: realizar el analisis de tipos y tokens por usuario.
+def typesforUser(xml):
+    tree = ET.parse(xml)
+    root_element = tree.getroot()
+    user_node = root_element.findall('ID')
+    if len(user_node) == 1:
+        usuario = user_node[0].text
+    else:
+        usuario = 'unkown_user'
+    tokens = getCleanBagofWords(xml)
+    types = loadBags(janitor_array(tokens))
+    return (usuario, types)
 
 # Name: lineUpPost
 # Goal: Imprimir un archivo tsv con los valores de
