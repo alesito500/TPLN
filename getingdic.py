@@ -1,4 +1,4 @@
-import os, fnmatch, nltk, re
+import os, fnmatch, nltk, re, normalization
 import xml.etree.ElementTree as ET
 from nltk.corpus import stopwords
 # Diccionario de clases
@@ -75,13 +75,14 @@ def getCleanBagofWords(archivos):
             for texto in root_element.iter('TEXT'):
                 #Obtengo los posts
                 palabras = palabras + texto.text
-    elif(isinstance(archivos,str)):
+    elif(isinstance(archivos, str)):
         tree = ET.parse(archivos)
         root_element = tree.getroot()
         for texto in root_element.iter('TEXT'):
             #Obtengo los posts
             palabras = palabras + texto.text
-    tokens = nltk.word_tokenize(palabras)
+    # tokens = nltk.word_tokenize(palabras)
+    tokens = normalization.remove_special_characters(palabras)
     sw = set(stopwords.words('english'))
     cleanTokens = []
     for t in tokens:

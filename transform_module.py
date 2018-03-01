@@ -1,5 +1,6 @@
 # Script modular de python
 import getingdic
+import normalization as norm
 from sklearn.feature_extraction.text import CountVectorizer
 types = {
 'axp':{},
@@ -22,26 +23,44 @@ def loadchunkXML(clase):
     for i in range(1,11):
         chunks_ax.append(list(getingdic.all_files(pb[clase]+'/chunk'+str(i), '*.xml')))
 
+
 def analyzeChunk(clase, chunk=1):
     types[clase]['chunk'+str(chunk)] = getingdic.inlinePost(chunks_ax[chunk - 1])
 
-def runForAll():
-    chunks_ax = []
-    loadchunkXML('axp')
-    # print('Numero de carpetas chunks ', len(chunks_ax))
-    for i in range(len(chunks_ax)):
-        analyzeChunk('axp', i + 1)
-        # print('Numero de chunks en types ', len(types['axp']))
-    chunks_ax = []
-    loadchunkXML('axn')
-    # print('Numero de carpetas chunks ', len(chunks_ax))
-    for i in range(len(chunks_ax)):
-        analyzeChunk('axn', i + 1)
-        # print('Numero de chunks en types ', len(types['axn']))
-    # for i in range(1,11):
-    #     types['ax']['chunk'+str(i)] = types['axp']['chunk'+str(i)] + types['axn']['chunk'+str(i)]
-# print('Numero de renglones', len(types['ax']['chunk1']))
 
+def appendPost(clasef, clased):
+    for chunk in types[clasef]:
+        types[clased]['rows'] = types[clased]['rows'] + types[clasef][chunk]
+
+def fillOnesZeros(prefclase):
+    tmp_matrix = [ 1 for chunk in types[prefclase+'p'].keys() for post in types[prefclase+'p'][chunk] ]
+    tmp_matrix = tmp_matrix + [ 0 for chunk in types[prefclase+'n'].keys() for post in types[prefclase+'n'][chunk] ]
+    return tmp_matrix
+
+
+chunks_ax = []
+loadchunkXML('axp')
+for i in range(len(chunks_ax)):
+    analyzeChunk('axp', i + 1)
+
+
+chunks_ax = []
+loadchunkXML('axn')
+for i in range(len(chunks_ax)):
+    analyzeChunk('axn', i + 1)
+
+
+print('Numero de chunks en types ', len(types['axp']))
+print('Numero de chunks en types ', len(types['axn']))
+
+types['ax']['rows'] = []
+appendPost('axp','ax')
+appendPost('axn','ax')
+print('Numero de post en anorexia', len(types['ax']['rows']))
+
+types['ax']['cols'] = []
+types['ax']['cols'] = fillOnesZeros('ax')
+print(len(types['ax']['cols']))
 
 # # Document-term matrix in chunk1
 vect = CountVectorizer(stop_words='english', binary=True)
