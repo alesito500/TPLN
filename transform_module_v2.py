@@ -2,20 +2,25 @@
 import getingdic as dic
 import evaluator
 import normalization as norm
+import sys
 from sklearn.feature_extraction.text import CountVectorizer
+
+if len(sys.argv) == 2:
+    No_ch = sys.argv[1]
+
+No_ch = int(No_ch)
 
 # Adquisicion del corpus >>>>>>>> INICIO
 print("Adquisición de corpus de depresion")
 dic.chunks_paths = []
 dic.loadchunkXML('dpp')
-for i in range(len(dic.chunks_paths)):
-    dic.analyzeChunk('dpp', i + 1)
+dic.analyzeChunk('dpp', No_ch)
+
 
 
 dic.chunks_paths = []
 dic.loadchunkXML('dpn')
-for i in range(len(dic.chunks_paths)):
-    dic.analyzeChunk('dpn', i + 1)
+dic.analyzeChunk('dpn', No_ch)
 
 
 print('Numero de chunks en types ', len(dic.types['dpp']))
@@ -57,14 +62,13 @@ evaluator.get_metrics(dic.types['dp']['cols'], y_predicted)
 print("Adquisición de corpus de anorexia")
 dic.chunks_paths = []
 dic.loadchunkXML('axp')
-for i in range(len(dic.chunks_paths)):
-    dic.analyzeChunk('axp', i + 1)
+dic.analyzeChunk('axp', No_ch)
+
 
 
 dic.chunks_paths = []
 dic.loadchunkXML('axn')
-for i in range(len(dic.chunks_paths)):
-    dic.analyzeChunk('axn', i + 1)
+dic.analyzeChunk('axn', No_ch)
 
 
 print('Numero de chunks en types ', len(dic.types['axp']))

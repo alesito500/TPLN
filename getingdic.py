@@ -20,6 +20,11 @@ pb = {
 # Arreglo de chunks
 chunks_paths = []
 
+def initialize_class_types(clase):
+    types[clase]['rows'] = []
+    types[clase]['cols'] = []
+    types[clase]['names'] = []
+
 # **** Zona de lectura del path ****
 # Name: all_files
 # Goal: Get a list with the paths of all xml files in a given root
@@ -37,6 +42,15 @@ def all_files(root, patterns ='*', single_level = False, yield_folders = False):
                     break
         if single_level:
             break
+
+
+# Name:   analyzeChunk
+# Goal:   Analizar un chunk para extraer: los posts en línea o
+#         los tokens por separado.
+# In:     clase => [axp, axn, dpp, dpn], chunk => [1..10]
+# Out:    None
+def analyzeChunk(clase, chunk=1):
+    types[clase]['chunk'+str(chunk)] = inlinePost(chunks_paths[chunk - 1])
 
 # Name:   loadchunkXML
 # Goal:   Cargar la estructura de archivo XML
@@ -202,3 +216,17 @@ def inlinePost( archivos):
         # Vaciado de las publicaciones por usuario
         full_tokens.append(usuario_linea)
     return full_tokens
+
+
+# -------Procesamiento conjunto-----------------
+# Junta todos los post (positivos y negativos) en un solo arreglo. Esto prepara los
+# datos para la vectorización
+def appendPost(clasef, clased):
+    for chunk in types[clasef]:
+        types[clased]['rows'] = types[clased]['rows'] + types[clasef][chunk]
+
+# Llena un vector con unos y ceros para el entrenamiento de los algoritmos de ML
+def fillOnesZeros(prefclase):
+    tmp_matrix = [ 1 for chunk in types[prefclase+'p'].keys() for post in types[prefclase+'p'][chunk] ]
+    tmp_matrix = tmp_matrix + [ 0 for chunk in types[prefclase+'n'].keys() for post in types[prefclase+'n'][chunk] ]
+    return tmp_matrix

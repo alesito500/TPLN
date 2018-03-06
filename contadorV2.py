@@ -179,19 +179,19 @@ depresion_pos = list(all_files('../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 
 
 # print "Number of global types: ", len(types.get('ax'))
 
-print "Analisys DEPRESION"
-print "Analisys DEPRESION positivo"
+print ("Analisys DEPRESION")
+print ("Analisys DEPRESION positivo")
 flag = '1'
 bag = loadBags(getBagofWords(depresion_pos), 'dpp')
 # loadBags(bag, 'dp')
-print "Number of tokens: ", len(bag)
-print "Number of types: ", len(types.get('dpp'))
+print ("Number of tokens: ", len(bag))
+print ("Number of types: ", len(types.get('dpp')))
 
-print "Analisys DEPRESION negativo"
+print ("Analisys DEPRESION negativo")
 flag = '0'
 bag = loadBags(getBagofWords(depresion_neg), 'dpn')
 # loadBags(bag, 'dp')
-print "Number of tokens: ", len(bag)
-print "Number of types: ", len(types.get('dpn'))
+print ("Number of tokens: ", len(bag))
+print ("Number of types: ", len(types.get('dpn')))
 #
 # print "Number of global types: ", len(types.get('dp'))
