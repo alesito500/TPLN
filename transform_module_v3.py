@@ -68,14 +68,12 @@ evaluator.get_metrics(dic.types['dp']['cols'], tfidf_y_predicted)
 print("Adquisición de corpus de anorexia")
 dic.chunks_paths = []
 dic.loadchunkXML('axp')
-for i in range(len(dic.chunks_paths)):
-    dic.analyzeChunk('axp', i + 1)
+dic.analyzeChunk('axp', No_ch)
 
 
 dic.chunks_paths = []
 dic.loadchunkXML('axn')
-for i in range(len(dic.chunks_paths)):
-    dic.analyzeChunk('axn', i + 1)
+dic.analyzeChunk('axn', No_ch)
 
 
 print('Numero de chunks en types ', len(dic.types['axp']))
