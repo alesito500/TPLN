@@ -68,20 +68,34 @@ def loadchunkXML(clase):
 # Goal: Tokenize a list of xml files
 def getBagofWords(archivos):
     palabras = ''
-    for xml in archivos:
-        usuario_linea = ''
-        tree = ET.parse(xml)
+    no_post = 0
+    if(isinstance(archivos, list)):
+        for xml in archivos:
+            usuario_linea = ''
+            tree = ET.parse(xml)
+            root_element = tree.getroot()
+            for texto in root_element.iter('TEXT'):
+                #Obtengo los posts
+                palabras = palabras + texto.text
+                no_post = no_post + 1
+    elif(isinstance(archivos, str)):
+        tree = ET.parse(archivos)
         root_element = tree.getroot()
         for texto in root_element.iter('TEXT'):
             #Obtengo los posts
             palabras = palabras + texto.text
-    tokens = nltk.word_tokenize(palabras)
-    return tokens
+            no_post = no_post + 1
+    # tokens = nltk.word_tokenize(palabras)
+    palabras = tag_lines(palabras)
+    palabras = normalization.remove_special_characters(palabras)
+    tokens = normalization.tokenize_text(palabras)
+    return (no_post, tokens)
 
 # Name: getCleanBagofWords
 # Goal: Tokenize a list of xml files
 def getCleanBagofWords(archivos):
     palabras = ''
+    no_post = 0
     if(isinstance(archivos, list)):
         for xml in archivos:
             tree = ET.parse(xml)
@@ -89,20 +103,19 @@ def getCleanBagofWords(archivos):
             for texto in root_element.iter('TEXT'):
                 #Obtengo los posts
                 palabras = palabras + texto.text
+                no_post = no_post + 1
     elif(isinstance(archivos, str)):
         tree = ET.parse(archivos)
         root_element = tree.getroot()
         for texto in root_element.iter('TEXT'):
             #Obtengo los posts
             palabras = palabras + texto.text
-    # tokens = nltk.word_tokenize(palabras)
-    tokens = normalization.remove_special_characters(palabras)
-    sw = set(stopwords.words('english'))
-    cleanTokens = []
-    for t in tokens:
-        if t not in sw:
-            cleanTokens.append(t)
-    return cleanTokens
+            no_post = no_post + 1
+    palabras = tag_lines(palabras)
+    palabras = normalization.remove_special_characters(palabras)
+    palabras = normalization.remove_stopwords(palabras)
+    tokens = normalization.tokenize_text(palabras)
+    return (no_post, tokens)
 
 # ---------TYPES----------------
 # Name: loadBags
@@ -116,25 +129,46 @@ def loadBags(bag):
             types[token] = 1
     return types
 
+def tag_lines(post):
+    post = re.sub(r'[$|€][0-9]+(\.[0-9]+)?', 'tagmney', post, flags=re.IGNORECASE)
+    post = re.sub(r'[0-9]{1,2}[-|/][0-9]{1,2}[-|/][0-9]{2,4}', 'tagdte', post, flags=re.IGNORECASE)
+    post = re.sub(r'\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)', 'tagstdrction', post, flags=re.IGNORECASE)
+    post = re.sub(r'[0-9]+','tagnmber', post, flags=re.IGNORECASE)
+    post = re.sub(r'[\s]+',' ',post)
+    post = post.strip()
+    return post
+
+
 # Name: janitor
 # Goal: Take of urls and emails from the given dictionary
 def janitor(dcy):
     urls = re.compile(r'\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)')
+    url_tag = "<URL>"
     mails = re.compile(r'[^@]+@[^@]+\.[^@]+')
+    mail_tag = "<MAIL>"
+    parseddcy = {}
     for llave in dcy.keys():
         # print "INTO JANITOR LOOP ", llave
         if re.match(urls, llave):
-            # print "URL FOUND ", llave
-            del dcy[llave]
+            # print("URL FOUND ", llave)
+            if url_tag in parseddcy:
+                parseddcy[url_tag] = parseddcy[url_tag] + dcy[llave]
+            else:
+                parseddcy[url_tag] = dcy[llave]
         elif re.match(mails, llave):
-            # print "MAIL FOUND ", llave
-            del dcy[llave]
-    return dcy
+            # print("MAIL FOUND ", llave)
+            if mail_tag in parseddcy:
+                parseddcy[mail_tag] = parseddcy[mail_tag] + dcy[llave]
+            else:
+                parseddcy[mail_tag] = dcy[llave]
+        else:
+            parseddcy[llave] = dcy[llave]
+    return parseddcy
 
 # Name: janitor
 # Goal: Take of urls and emails from the given dictionary
 def janitor_array(dcy):
-    urls = re.compile(r'\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)')
+    urls = re.compile(r'//(www\.)?[\w@:%\.\+~#=]{2,256}\.[a-z]{2,6}([\w@:%\+\.~#?&//=]*)',re.I)
     mails = re.compile(r'[^@]+@[^@]+\.[^@]+')
     c = 0
     for llave in dcy:
@@ -159,7 +193,7 @@ def forUserAnalysis(xml):
         usuario = user_node[0].text
     else:
         usuario = 'unkown_user'
-    tokens = getCleanBagofWords(xml)
+    (no_post, tokens) = getCleanBagofWords(xml)
     types = loadBags(janitor_array(tokens))
     return str(usuario)+'\t'+str(len(types))+'\t'+str(len(tokens))
 
@@ -173,9 +207,9 @@ def typesforUser(xml):
         usuario = user_node[0].text
     else:
         usuario = 'unkown_user'
-    tokens = getCleanBagofWords(xml)
+    (no_post, tokens) = getCleanBagofWords(xml)
     types = loadBags(janitor_array(tokens))
-    return (usuario, types)
+    return (usuario, no_post, types)
 
 # Name: lineUpPost
 # Goal: Imprimir un archivo tsv con los valores de
@@ -214,8 +248,29 @@ def inlinePost( archivos):
                 # Concatenacion por usuario
                 usuario_linea = usuario_linea + ' ' + texto.text
         # Vaciado de las publicaciones por usuario
+        usuario_linea = tag_lines(usuario_linea)
         full_tokens.append(usuario_linea)
     return full_tokens
+
+def PostForUser(xml):
+    uid = ''
+    usuario_linea = []
+    # Analisis XML del archivo
+    tree = ET.parse(xml)
+    root_element = tree.getroot()
+    uid = root_element.find('ID').text
+    # Extraccion de las publicaciones
+    for texto in root_element.iter('TEXT'):
+        # Concatenacion por usuario
+        p = tag_lines(texto.text)
+        if not p:
+            continue
+        elif re.match(r'\[removed\]', p):
+            continue
+        else:
+            usuario_linea.append(p)
+    return (uid, usuario_linea)
+
 
 
 # -------Procesamiento conjunto-----------------
