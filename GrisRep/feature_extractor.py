@@ -1,0 +1,31 @@
+from sklearn.feature_extraction.text import CountVectorizer
+
+def bow_extractor(corpus, ngram_range=(1,1)):
+    vectorizer = CountVectorizer(min_df=1, max_features=1000, ngram_range=ngram_range, binary=False)
+    features = vectorizer.fit_transform(corpus)
+    return vectorizer, features
+
+def bow_extractor_maxdf(corpus, ngram_range=(1,1)):
+    vectorizer = CountVectorizer(min_df=1, max_df=0.95, max_features=1000, ngram_range=ngram_range)
+    features = vectorizer.fit_transform(corpus)
+    return vectorizer, features
+
+
+from sklearn.feature_extraction.text import TfidfTransformer
+def tfidf_transformer(bow_matrix):
+    transformer = TfidfTransformer(norm=None,
+                                   smooth_idf=True,
+                                   use_idf=True)
+    tfidf_matrix = transformer.fit_transform(bow_matrix)
+    return transformer, tfidf_matrix
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+def tfidf_extractor(corpus, ngram_range=(1,1)):
+    vectorizer = TfidfVectorizer(min_df=1,
+                                 norm=None,
+                                 smooth_idf=True,
+                                 use_idf=True,
+				 max_features=5000,
+                                 ngram_range=ngram_range)
+    features = vectorizer.fit_transform(corpus)
+    return vectorizer, features

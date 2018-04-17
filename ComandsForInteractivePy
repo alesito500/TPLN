@@ -1,0 +1,13 @@
+import getingdic as gd
+import Chunk as ch
+gd.loadchunkXML('dpp')
+for i in range(0,10):
+  print("Analizando chunk ",i+1)
+  chunk = ch.Chunk(i+1)
+  for v in gd.chunks_paths[i]:
+   (uid, posts) = gd.PostForUser(v)
+   chunk.newUser(uid, posts)
+  chunk.loadVocabulary()
+  chunk.calcIDLV()
+  print("chunk ",i,"\t",len(chunk.vocablos))
+  print("Fin del análisis")
