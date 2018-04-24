@@ -5,8 +5,10 @@ from nltk.corpus import stopwords
 types = {
 'axp':{},
 'axn':{},
+'axt':{},
 'dpp':{},
 'dpn':{},
+'dpt':{},
 'ax':{},
 'dp':{}
 }
@@ -14,8 +16,10 @@ types = {
 pb = {
 'axp': '../Corpus/TrainingCorpus_eRisk_2018/task2/eRisk 2018 - train/positive_examples',
 'axn': '../Corpus/TrainingCorpus_eRisk_2018/task2/eRisk 2018 - train/negative_examples',
+'axt': '../TestCorpus/task2',
 'dpp': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/positive_examples_anonymous_chunks',
-'dpn': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/negative_examples_anonymous_chunks'
+'dpn': '../Corpus/TrainingCorpus_eRisk_2018/task1/eRisk 2018 - training/2017 train/negative_examples_anonymous_chunks',
+'dpt': '../TestCorpus/task1'
 }
 # Arreglo de chunks
 chunks_paths = []
@@ -259,6 +263,8 @@ def PostForUser(xml):
     tree = ET.parse(xml)
     root_element = tree.getroot()
     uid = root_element.find('ID').text
+    uid = uid.replace('test_','')
+    uid = uid.replace('train_','')
     # Extraccion de las publicaciones
     for texto in root_element.iter('TEXT'):
         # Concatenacion por usuario

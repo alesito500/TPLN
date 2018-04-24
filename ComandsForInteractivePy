@@ -1,3 +1,4 @@
+#Comandos para calcular el IDLV por chunk
 import getingdic as gd
 import Chunk as ch
 gd.loadchunkXML('dpp')
@@ -11,3 +12,33 @@ for i in range(0,10):
   chunk.calcIDLV()
   print("chunk ",i,"\t",len(chunk.vocablos))
   print("Fin del análisis")
+
+
+# Comandos para imprimir en archivos los usuarios y sus posts
+import getingdic as dic
+import Chunk as ch
+for i in range(1,11):
+  No_ch = i
+  dic.chunks_paths = []
+  dic.loadchunkXML('axt')
+  chunk = ch.Chunk(No_ch)
+  for v in dic.chunks_paths[No_ch - 1]:
+      (uid, posts) = dic.PostForUser(v)
+      chunk.newUser(uid, posts)
+  for k, v in chunk.usuarios.items():
+    FH = open('ax/test/ch'+str(No_ch)+'/'+k+'.txt','w')
+    print("Escribiendo a ", k)
+    for post in v.posts:
+      FH.write(str(post)+'\n')
+    FH.close()
+
+
+
+print("Siguiente")
+
+
+dic.chunks_paths = []
+dic.loadchunkXML('dpn')
+for v in dic.chunks_paths[No_ch - 1]:
+    (uid, posts) = dic.PostForUser(v)
+    chunk.newUser(uid, posts)

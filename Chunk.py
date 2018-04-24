@@ -7,7 +7,11 @@ class Chunk:
         self.vocablos = {}
 
     def newUser(self, uid, posts):
-        self.usuarios[uid] = us.Usuario(uid, posts)
+        if uid in self.usuarios:
+            for el in posts:
+                self.usuarios[uid].newPost(el)
+        else:
+            self.usuarios[uid] = us.Usuario(uid, posts)
 
     def newWord(self, text):
         self.vocablos[text] = vo.Vocablo(text)
