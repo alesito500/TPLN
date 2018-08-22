@@ -20,13 +20,13 @@ import Chunk as ch
 for i in range(1,11):
   No_ch = i
   dic.chunks_paths = []
-  dic.loadchunkXML('axt')
+  dic.loadchunkXML('dpn')
   chunk = ch.Chunk(No_ch)
   for v in dic.chunks_paths[No_ch - 1]:
       (uid, posts) = dic.PostForUser(v)
       chunk.newUser(uid, posts)
   for k, v in chunk.usuarios.items():
-    FH = open('ax/test/ch'+str(No_ch)+'/'+k+'.txt','w')
+    FH = open('dp/train/ch'+str(No_ch)+'/negativo/'+k+'.txt','w')
     print("Escribiendo a ", k)
     for post in v.posts:
       FH.write(str(post)+'\n')
@@ -38,7 +38,7 @@ print("Siguiente")
 
 
 dic.chunks_paths = []
-dic.loadchunkXML('dpn')
+dic.loadchunkXML('dpp')
 for v in dic.chunks_paths[No_ch - 1]:
     (uid, posts) = dic.PostForUser(v)
     chunk.newUser(uid, posts)
