@@ -1,2 +1,3 @@
-# TPLN
-Repositorio para desarrollar el código de la UEA de Tecnologías del Procesamiento del Lenguaje Natural
+# Tecnologías del Procesamiento del Lenguaje Natural 
+
+Distintos códigos desarrollados para procesar textos en español
