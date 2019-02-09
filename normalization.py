@@ -44,6 +44,13 @@ def remove_stopwords(text):
     filtered_text = ' '.join(filtered_tokens)
     return filtered_text
 
+def remove_palabrasfuncionales(text):
+    tokens = tokenize_text(text)
+    swl2 = stopwords.getDic('es')
+    filtered_tokens = [token for token in tokens if token.lower() not in swl2]
+    filtered_text = ' '.join(filtered_tokens)
+    return filtered_text
+
 def normalize_corpus(corpus, tokenize=False):
     normalized_corpus = []
     for text in corpus:
