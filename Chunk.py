@@ -13,6 +13,9 @@ class Chunk:
         else:
             self.usuarios[uid] = us.Usuario(uid, posts)
 
+    def UserGenre(self, uid, genre):
+        self.usuarios[uid].setGenero(genre)
+
     def newWord(self, text):
         self.vocablos[text] = vo.Vocablo(text)
 

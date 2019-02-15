@@ -6,6 +6,7 @@ class Usuario:
         self.posts = []
         self.userDic = {}
         self.vocposts = []
+        self.genero = ''
         if(len(posts) > 0):
             for el in posts:
                 self.newPost(el)
@@ -27,3 +28,6 @@ class Usuario:
     def idlvMATRIX(self):
         for k, v in self.sortVocabulary():
             self.vocposts.append(v)
+
+    def setGenero(self, genre):
+        self.genero = genre
