@@ -1,17 +1,18 @@
 import Usuario as us
 import Vocablo as vo
 class Chunk:
-    def __init__(self, number):
+    def __init__(self, number, idioma='en'):
         self.number = number
+        self.idioma = idioma
         self.usuarios = {}
         self.vocablos = {}
 
     def newUser(self, uid, posts):
         if uid in self.usuarios:
             for el in posts:
-                self.usuarios[uid].newPost(el)
+                self.usuarios[uid].newPost(el, self.idioma)
         else:
-            self.usuarios[uid] = us.Usuario(uid, posts)
+            self.usuarios[uid] = us.Usuario(uid, posts, self.idioma)
 
     def UserGenre(self, uid, genre):
         self.usuarios[uid].setGenero(genre)

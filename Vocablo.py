@@ -31,11 +31,14 @@ class Vocablo:
     def n(self):
         return len(self.position)
 
+    def indice( self, i):
+        return ((i+1)//self.n())*100
+
     def IDLV( self, I):
         if I > 0:
             for i, v in enumerate(self.position):
                 if self.n() > 1:
-                    self.DPj = self.DPj + (exp(-2.3*(i/(self.n() - 1)))*(v/I))
+                    self.DPj = self.DPj + (exp(-2.3*(self.indice(i)/(self.n() - 1)))*(v/I))
                 else:
                     continue
         return self.DPj

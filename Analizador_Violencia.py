@@ -9,21 +9,21 @@ import Chunk as ch
 import csv
 
 corpus = {
-            'entrada1':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/resglobal.txt',
-            'entrada2':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/Respuestas_feb.csv',
-            'uni1':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/Salida/Stats/uni_principio.csv',
-            'uni2':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Piloto/Salida/Stats/uni_final.csv',
-            'bi1':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/Salida/Stats/bi_principio.csv',
-            'bigraf1':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/Salida/Graph/grafo_bi_principio.csv',
-            'bi2':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Piloto/Salida/Stats/bi_final.csv',
-            'bigraf2':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Piloto/Salida/Graph/grafo_bi_final.csv',
-            'tri1':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/Salida/Stats/tri_principio.csv',
-            'trigraf1':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Test_feb19/Salida/Graph/grafo_tri_principio.csv',
-            'tri2':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Piloto/Salida/Stats/tri_final.csv',
-            'trigraf2':'/home/alesito500/Documentos/Madic/Proyecto_dos/Corpus/Piloto/Salida/Graph/grafo_tri_final.csv',
+            'entrada1':'Corpus/Test_feb19/resglobal.txt',
+            'entrada2':'Corpus/Test_feb19/Respuestas_feb.csv',
+            'uni1':'Corpus/Test_feb19/Salida/Stats/uni_principio.csv',
+            'uni2':'Corpus/Piloto/Salida/Stats/uni_final.csv',
+            'bi1':'Corpus/Test_feb19/Salida/Stats/bi_principio.csv',
+            'bigraf1':'Corpus/Test_feb19/Salida/Graph/grafo_bi_principio.csv',
+            'bi2':'Corpus/Piloto/Salida/Stats/bi_final.csv',
+            'bigraf2':'Corpus/Piloto/Salida/Graph/grafo_bi_final.csv',
+            'tri1':'Corpus/Test_feb19/Salida/Stats/tri_principio.csv',
+            'trigraf1':'Corpus/Test_feb19/Salida/Graph/grafo_tri_principio.csv',
+            'tri2':'Corpus/Piloto/Salida/Stats/tri_final.csv',
+            'trigraf2':'Corpus/Piloto/Salida/Graph/grafo_tri_final.csv',
             }
 
-respuestas = ch.Chunk(1)
+respuestas = ch.Chunk(0, 'es')
 # @Nombre: extraeUNI
 # @Definición:
 #   Función para extraer unigramas de un documento dado
@@ -55,12 +55,12 @@ def extraeUNI(archivo, sw = False):
 
 
 def analisiPorUsuario(archivo):
-    with open(archivo) as csvfile:
-        leeCSV = csv.reader(csvfile, delimiter=';')
-        for row in leeCSV:
-            (uid, respuesta) = (row[0], row[2])
-            respuestas.newUser(uid, respuesta)
-            respuestas.UserGenre(uid, row[1])
+    csvfile = open(archivo)
+    leeCSV = csv.reader(csvfile, delimiter=';')
+    for row in leeCSV:
+        (uid, respuesta) = (row[0], [row[2]])
+        respuestas.newUser(uid, respuesta)
+        respuestas.UserGenre(uid, row[1])
     respuestas.loadVocabulary()
     respuestas.calcIDLV()
 

@@ -65,9 +65,14 @@ def normalize_corpus(corpus, tokenize=False):
             normalized_corpus.append(text)
     return normalized_corpus
 
-def normalize_post(text, tokenize=False):
+def normalize_post(text, tokenize=False, idioma='en'):
     text = remove_special_characters(text)
-    text = remove_stopwords(text)
+    if idioma == 'en':
+        #Remoción de palabras funcionales en inglés
+        text = remove_stopwords(text)
+    elif idioma == 'es':
+        #Remoción de palabras funcionales en español
+        text = remove_palabrasfuncionales(text)
     if tokenize:
         text = tokenize_text(text)
     return text

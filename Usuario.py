@@ -1,18 +1,19 @@
 import getingdic as gd
 import normalization as n
 class Usuario:
-    def __init__(self, uid, posts):
+    def __init__(self, uid, posts, idioma='en'):
         self.uid = uid
+        self.idioma = idioma
         self.posts = []
         self.userDic = {}
         self.vocposts = []
         self.genero = ''
         if(len(posts) > 0):
             for el in posts:
-                self.newPost(el)
+                self.newPost(el, self.idioma)
 
-    def newPost(self, text):
-        self.posts.append(n.normalize_post(text, True))
+    def newPost(self, text, idioma='en'):
+        self.posts.append(n.normalize_post(text, True, idioma))
 
     def newEntry(self, text, IDLV):
         if text not in self.userDic:
