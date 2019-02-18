@@ -4,6 +4,7 @@ bin-debug/
 bin-release/
 tokens_en_linea/
 Dictionaries/
+Corpus/
 [Oo]bj/ # FlashDevelop obj
 [Bb]in/ # FlashDevelop bin
 
