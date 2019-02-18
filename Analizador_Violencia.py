@@ -6,23 +6,11 @@
 import normalization as norm
 from nltk import ngrams
 import Chunk as ch
+import Path
 import csv
+import os
 
-corpus = {
-            'entrada1':'Corpus/Test_feb19/resglobal.txt',
-            'entrada2':'Corpus/Test_feb19/Respuestas_feb.csv',
-            'uni1':'Corpus/Test_feb19/Salida/Stats/uni_principio.csv',
-            'uni2':'Corpus/Piloto/Salida/Stats/uni_final.csv',
-            'bi1':'Corpus/Test_feb19/Salida/Stats/bi_principio.csv',
-            'bigraf1':'Corpus/Test_feb19/Salida/Graph/grafo_bi_principio.csv',
-            'bi2':'Corpus/Piloto/Salida/Stats/bi_final.csv',
-            'bigraf2':'Corpus/Piloto/Salida/Graph/grafo_bi_final.csv',
-            'tri1':'Corpus/Test_feb19/Salida/Stats/tri_principio.csv',
-            'trigraf1':'Corpus/Test_feb19/Salida/Graph/grafo_tri_principio.csv',
-            'tri2':'Corpus/Piloto/Salida/Stats/tri_final.csv',
-            'trigraf2':'Corpus/Piloto/Salida/Graph/grafo_tri_final.csv',
-            }
-
+directorios = Path.Path()
 respuestas = ch.Chunk(0, 'es')
 # @Nombre: extraeUNI
 # @Definición:
@@ -32,16 +20,25 @@ respuestas = ch.Chunk(0, 'es')
 # @Salidas:
 #   Listado con la pareja de valores (tokens, frecuencia)
 def extraeUNI(archivo, sw = False):
-    corpus = open(archivo, 'r')
-    respuestas = corpus.readlines()
-    corpus.close()
+    contestacion = []
+    if(type(archivo) is list):
+        for publicacion in archivo:
+            for elemento in publicacion:
+                contestacion.append(elemento)
+    elif( os.path.isfile(archivo) ):
+        corpus = open(archivo, 'r')
+        contestacion = corpus.readlines()
+        corpus.close()
+    else:
+        print ("Error con la entrada de extraeUNI: ni archivo, ni lista")
+        pass
     tokens = []
     vocabulario = {}
-    for i in range(0, len(respuestas)):
+    for i in range(0, len(contestacion)):
         if sw:
-            tokens.append(norm.tokenize_text(norm.remove_palabrasfuncionales(norm.remove_special_characters(respuestas[i].lower()))))
+            tokens.append(norm.tokenize_text(norm.remove_palabrasfuncionales(norm.remove_special_characters(contestacion[i].lower()))))
         else:
-            tokens.append(norm.tokenize_text(norm.remove_special_characters(respuestas[i].lower())))
+            tokens.append(norm.tokenize_text(norm.remove_special_characters(contestacion[i].lower())))
     for t in tokens:
         for o in t:
             if o in vocabulario:
@@ -65,6 +62,7 @@ def analisiPorUsuario(archivo):
     respuestas.calcIDLV()
 
 
+
 # @Nombre: extraeN
 # @Definición:
 #     Función para extraer los n-gramas de un documento dado
@@ -74,17 +72,26 @@ def analisiPorUsuario(archivo):
 # @Salidas:
 #     Listado con la pareja de datos: (ngramas, frecuencia)
 def extraeN(archivo, n, sw = False):
-    corpus = open(archivo, 'r')
-    respuestas = corpus.readlines()
-    corpus.close()
+    contestacion = []
+    if(type(archivo) is list):
+        for publicacion in archivo:
+            for elemento in publicacion:
+                contestacion.append(elemento)
+    elif( os.path.isfile(archivo)):
+        corpus = open(archivo, 'r')
+        contestacion = corpus.readlines()
+        corpus.close()
+    else:
+        print ("Error con la entrada de extraeUNI: ni archivo, ni lista")
+        pass
     tokens = []
     ngramas = []
     vocabulario = {}
-    for i in range(0, len(respuestas)):
+    for i in range(0, len(contestacion)):
         if(sw):
-            tokens.append(norm.tokenize_text(norm.remove_palabrasfuncionales(norm.remove_special_characters(respuestas[i].lower()))))
+            tokens.append(norm.tokenize_text(norm.remove_palabrasfuncionales(norm.remove_special_characters(contestacion[i].lower()))))
         else:
-            tokens.append(norm.tokenize_text(norm.remove_special_characters(respuestas[i].lower())))
+            tokens.append(norm.tokenize_text(norm.remove_special_characters(contestacion[i].lower())))
     for t in tokens:
         ngramas.append(ngrams(t, n))
     for g in ngramas:
@@ -100,11 +107,11 @@ def extraeN(archivo, n, sw = False):
 
 def defecto(sw = False):
     # Archivo de entrada
-    c_i = corpus['entrada1']
+    c_i = directorios.entrada
     # Extrae unigramas
     uni_i = extraeUNI(c_i, sw)
     # Archivo de salida con los unigramas
-    u_i = open(corpus['uni1'],'w')
+    u_i = open(directorios.suni,'w')
     # Impresión de los resultados obtenidos
     for v, k in uni_i:
         renglon = str(k)+"\t"+str(v)+"\n"
@@ -114,8 +121,8 @@ def defecto(sw = False):
     # Extrae bigramas
     bi_i = extraeN(c_i,2, sw)
     # Archivo de salida con los bigramas
-    u_i = open(corpus['bi1'],'w')
-    g_i = open(corpus['bigraf1'],'w')
+    u_i = open(directorios.sbi,'w')
+    g_i = open(directorios.sbig,'w')
     g_i.write("Source\tTarget\n")
     # Impresión de los resultados obtenidos
     for v, k in bi_i:
@@ -128,51 +135,8 @@ def defecto(sw = False):
     # Extrae trigramas
     tri_i = extraeN(c_i,3, sw)
     # Archivo de salida con los trigramas
-    u_i = open(corpus['tri1'],'w')
-    g_i = open(corpus['trigraf1'],'w')
-    g_i.write("Source\tTarget\n")
-    # Impresión de los resultados obtenidos
-    for v, k in tri_i:
-        renglon=str(k)+"\t"+str(v)+"\n"
-        u_i.write(renglon)
-        renglon = str(k[0])+"\t"+str(k[1])+"\n"
-        g_i.write(renglon)
-        renglon = str(k[1])+"\t"+str(k[2])+"\n"
-        g_i.write(renglon)
-    u_i.close()
-    g_i.close()
-    # Archivo de entrada
-    c_i = corpus['entrada2']
-    # Extrae unigramas
-    uni_i = extraeUNI(c_i, sw)
-    # Archivo de salida con los unigramas
-    u_i = open(corpus['uni2'],'w')
-    # Impresión de los resultados obtenidos
-    for v, k in uni_i:
-        u_i.write(str(k))
-        u_i.write("\t")
-        u_i.write(str(v))
-        u_i.write("\n")
-    u_i.close()
-    # Extrae bigramas
-    bi_i = extraeN(c_i,2, sw)
-    # Archivo de salida con los bigramas
-    u_i = open(corpus['bi2'],'w')
-    g_i = open(corpus['bigraf2'],'w')
-    g_i.write("Source\tTarget\n")
-    # Impresión de los resultados obtenidos
-    for v, k in bi_i:
-        renglon=str(k)+"\t"+str(v)+"\n"
-        u_i.write(renglon)
-        renglon = str(k[0])+"\t"+str(k[1])+"\n"
-        g_i.write(renglon)
-    u_i.close()
-    g_i.close()
-    # Extrae trigramas
-    tri_i = extraeN(c_i,3, sw)
-    # Archivo de salida con los trigramas
-    u_i = open(corpus['tri2'],'w')
-    g_i = open(corpus['trigraf2'],'w')
+    u_i = open(directorios.stri,'w')
+    g_i = open(directorios.strig,'w')
     g_i.write("Source\tTarget\n")
     # Impresión de los resultados obtenidos
     for v, k in tri_i:
@@ -187,11 +151,11 @@ def defecto(sw = False):
 
 def personalizado(sw = False):
     # Archivo de entrada
-    c_i = corpus['entrada1']
+    c_i = directorios['entrada1']
     # Extrae unigramas
     uni_i = extraeUNI(c_i, sw)
     # Archivo de salida con los unigramas
-    u_i = open(corpus['uni1'],'w')
+    u_i = open(directorios['uni1'],'w')
     # Impresión de los resultados obtenidos
     for v, k in uni_i:
         renglon = str(k)+"\t"+str(v)+"\n"
@@ -201,8 +165,8 @@ def personalizado(sw = False):
     # Extrae bigramas
     bi_i = extraeN(c_i,2, sw)
     # Archivo de salida con los bigramas
-    u_i = open(corpus['bi1'],'w')
-    g_i = open(corpus['bigraf1'],'w')
+    u_i = open(directorios['bi1'],'w')
+    g_i = open(directorios['bigraf1'],'w')
     g_i.write("Source\tTarget\n")
     # Impresión de los resultados obtenidos
     for v, k in bi_i:
@@ -215,8 +179,8 @@ def personalizado(sw = False):
     # Extrae trigramas
     tri_i = extraeN(c_i,3, sw)
     # Archivo de salida con los trigramas
-    u_i = open(corpus['tri1'],'w')
-    g_i = open(corpus['trigraf1'],'w')
+    u_i = open(directorios['tri1'],'w')
+    g_i = open(directorios['trigraf1'],'w')
     g_i.write("Source\tTarget\n")
     # Impresión de los resultados obtenidos
     for v, k in tri_i:
@@ -238,8 +202,12 @@ def menu():
     instrucciones += "\nIngresa el número de una de las siguientes opciones"
     instrucciones += "\n(\t1\t)\tAnalizar las respuestas de las encuestas piloto"
     instrucciones += "\n(\t2\t)\tAnalizar las respuestas de las encuestas piloto sin palabras funcionales"
-    instrucciones += "\n(\t3\t)\tAnalizar la matriz conceptual"
-    instrucciones += "\n(\t4\t)\tAnalizar un archivo en específico"
+    instrucciones += "\n(\t3\t)\tAnalizar las respuestas de las encuestas de febrero"
+    instrucciones += "\n(\t4\t)\tAnalizar las respuestas de las encuestas de febrero sin palabras funcionales"
+    instrucciones += "\n(\t5\t)\tAnalizar las respuestas de las encuestas de febrero por usuarios"
+    instrucciones += "\n(\t6\t)\tAnalizar las respuestas de las encuestas de febrero por usuarios sin palabras funcionales"
+    instrucciones += "\n(\t#\t)\tAnalizar la matriz conceptual"
+    instrucciones += "\n(\t#\t)\tAnalizar un archivo en específico"
     instrucciones += "\n:__"
     seleccion = 1
     try:
@@ -251,14 +219,24 @@ def menu():
 
 def main():
     seleccion = menu()
+    global directorios
     if(seleccion == 1 ):
+        defecto()
+        directorios = Path.Path(2)
         defecto()
     elif(seleccion == 2):
         defecto(True)
+        directorios = Path.Path(2)
+        defecto(True)
     elif(seleccion == 3):
-        matriz()
+        directorios = Path.Path(3)
+        defecto()
     elif(seleccion == 4):
-        personalizado(True)
+        directorios = Path.Path(3)
+        defecto(True)
+    elif(seleccion == 5):
+        directorios = Path.Path(4)
+        analisiPorUsuario(directorios.entrada)
 
 
 if __name__ == "__main__":
