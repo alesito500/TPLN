@@ -60,6 +60,7 @@ def analisiPorUsuario(archivo):
         respuestas.UserGenre(uid, row[1])
     respuestas.loadVocabulary()
     respuestas.calcIDLV()
+    respuestas.loadUserF()
 
 
 
@@ -237,6 +238,9 @@ def main():
     elif(seleccion == 5):
         directorios = Path.Path(4)
         analisiPorUsuario(directorios.entrada)
+    else:
+        print("Aún no esta disponible esta opción")
+        main()
 
 
 if __name__ == "__main__":

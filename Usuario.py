@@ -18,6 +18,8 @@ class Usuario:
     def newEntry(self, text, IDLV):
         if text not in self.userDic:
             self.userDic[text] = IDLV
+        else:
+            self.userDic[text] = self.userDic[text] + IDLV
 
     def sortVocabulary(self):
         items = [(v,k) for k, v in self.userDic.items()]

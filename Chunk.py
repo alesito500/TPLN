@@ -45,6 +45,12 @@ class Chunk:
                     v.newEntry(self.vocablos[word.lower()].word, self.vocablos[word.lower()].IDLV(0))
         self.setUserMatrix()
 
+    def loadUserF(self):
+        for k, v in self.usuarios.items():
+            for p in v.posts:
+                for word in p:
+                    v.newEntry(self.vocablos[word.lower()].word, 1)
+
     def setUserMatrix(self):
         for k,v in self.usuarios.items():
             v.idlvMATRIX()
