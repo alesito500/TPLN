@@ -41,6 +41,7 @@ class Path:
         else:
             self.entrada = 'Corpus/Test_feb19/Respuestas_feb.csv'
             self.suni = 'Corpus/Test_feb19/Salida/Stats/uni_porusuario.csv'
+            self.sidlp = 'Corpus/Test_feb19/Salida/Stats/idlp_general.csv'
             self.sbi = 'Corpus/Test_feb19/Salida/Stats/bi_porusuario.csv'
             self.stri = 'Corpus/Test_feb19/Salida/Stats/tri_porusuario.csv'
             self.sbig = 'Corpus/Test_feb19/Salida/Graph/grafo_bi_porusuario.csv'

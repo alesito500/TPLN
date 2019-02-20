@@ -68,6 +68,18 @@ def analisiPorUsuario():
         for k,v in respuestas.usuarios.items():
             for l, c in v.userDic.items():
                 writer.writerow({'Usuario':k, 'Vocablo':l, 'Frecuencia':c})
+    IDLVdic = {}
+    tfs = [(v.IDLV(0), k) for k,v in respuestas.vocablos.items()]
+    tfs.sort()
+    tfs.reverse()
+    for i in range(0,len(tfs)):
+        IDLVdic[tfs[i][1]] = tfs[i][0]
+    with open(directorios.sidlp,'w', newline='') as csvfile:
+      fieldnames=['palabra', 'IDLP']
+      writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+      writer.writeheader()
+      for llave in IDLVdic.keys():
+          writer.writerow({'palabra': llave, 'IDLP':IDLVdic[llave]})
 
 
 
