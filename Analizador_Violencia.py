@@ -51,8 +51,8 @@ def extraeUNI(archivo, sw = False):
     return items
 
 
-def analisiPorUsuario(archivo):
-    csvfile = open(archivo)
+def analisiPorUsuario():
+    csvfile = open(directorios.entrada)
     leeCSV = csv.reader(csvfile, delimiter=';')
     for row in leeCSV:
         (uid, respuesta) = (row[0], [row[2]])
@@ -61,6 +61,13 @@ def analisiPorUsuario(archivo):
     respuestas.loadVocabulary()
     respuestas.calcIDLV()
     respuestas.loadUserF()
+    with open(directorios.suni, 'w', newline='') as csvfile:
+        fieldnames = ['Usuario', 'Vocablo', 'Frecuencia']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for k,v in respuestas.usuarios.items():
+            for l, c in v.userDic.items():
+                writer.writerow({'Usuario':k, 'Vocablo':l, 'Frecuencia':c})
 
 
 
@@ -237,7 +244,8 @@ def main():
         defecto(True)
     elif(seleccion == 5):
         directorios = Path.Path(4)
-        analisiPorUsuario(directorios.entrada)
+        analisiPorUsuario()
+
     else:
         print("Aún no esta disponible esta opción")
         main()
