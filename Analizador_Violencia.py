@@ -12,6 +12,7 @@ import os
 
 directorios = Path.Path()
 respuestas = ch.Chunk(0, 'es')
+resgeneros = {'unigramas':{'Masculino':{}, 'Femenino':{}, 'SIN_DEFINIR':{}}, 'bigramas':{'Masculino':{}, 'Femenino':{}, 'SIN_DEFINIR':{}}, 'trigramas':{'Masculino':{}, 'Femenino':{}, 'SIN_DEFINIR':{}}}
 # @Nombre: extraeUNI
 # @Definición:
 #   Función para extraer unigramas de un documento dado
@@ -81,6 +82,33 @@ def analisiPorUsuario():
       for llave in IDLVdic.keys():
           writer.writerow({'palabra': llave, 'IDLP':IDLVdic[llave]})
 
+def analisisPorGenero():
+    for k, v in respuestas.usuarios.items():
+        for l in extraeUNI(v.posts):
+            if l[1] in resgeneros['unigramas'][v.genero]:
+                resgeneros['unigramas'][v.genero][l[1]] = resgeneros['unigramas'][v.genero][l[1]] + l[0]
+            else:
+                resgeneros['unigramas'][v.genero][l[1]] = l[0]
+        for l in extraeN(v.posts, 2):
+            if l[1] in resgeneros['bigramas'][v.genero]:
+                resgeneros['bigramas'][v.genero][l[1]] = resgeneros['bigramas'][v.genero][l[1]] + l[0]
+            else:
+                resgeneros['bigramas'][v.genero][l[1]] = l[0]
+    with open(directorios.sgen, 'w', newline='') as csvfile:
+        fieldnames = ['Genero', 'Vocablo', 'Frecuencia']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for k in resgeneros['unigramas'].keys():
+            for p in resgeneros['unigramas'][k].keys():
+                writer.writerow({'Genero':k,'Vocablo':p, 'Frecuencia':resgeneros['unigramas'][k][p]})
+    with open(directorios.sbigen, 'w', newline='') as csvfile:
+        fieldnames = ['Genero', 'Bigrama', 'Frecuencia']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for k in resgeneros['bigramas'].keys():
+            for p in resgeneros['bigramas'][k].keys():
+                writer.writerow({'Genero':k,'Bigrama':p, 'Frecuencia':resgeneros['bigramas'][k][p]})
+
 
 
 # @Nombre: extraeN
@@ -93,10 +121,10 @@ def analisiPorUsuario():
 #     Listado con la pareja de datos: (ngramas, frecuencia)
 def extraeN(archivo, n, sw = False):
     contestacion = []
+    espacio = ' '
     if(type(archivo) is list):
         for publicacion in archivo:
-            for elemento in publicacion:
-                contestacion.append(elemento)
+            contestacion.append(espacio.join(publicacion))
     elif( os.path.isfile(archivo)):
         corpus = open(archivo, 'r')
         contestacion = corpus.readlines()
@@ -224,8 +252,8 @@ def menu():
     instrucciones += "\n(\t2\t)\tAnalizar las respuestas de las encuestas piloto sin palabras funcionales"
     instrucciones += "\n(\t3\t)\tAnalizar las respuestas de las encuestas de febrero"
     instrucciones += "\n(\t4\t)\tAnalizar las respuestas de las encuestas de febrero sin palabras funcionales"
-    instrucciones += "\n(\t5\t)\tAnalizar las respuestas de las encuestas de febrero por usuarios"
-    instrucciones += "\n(\t6\t)\tAnalizar las respuestas de las encuestas de febrero por usuarios sin palabras funcionales"
+    instrucciones += "\n(\t5\t)\tAnalizar las respuestas de las encuestas de febrero por usuarios, sin palabras funcionales"
+    instrucciones += "\n(\t6\t)\tAnalizar las respuestas de las encuestas de febrero por género, sin palabras funcionales"
     instrucciones += "\n(\t#\t)\tAnalizar la matriz conceptual"
     instrucciones += "\n(\t#\t)\tAnalizar un archivo en específico"
     instrucciones += "\n:__"
@@ -257,7 +285,10 @@ def main():
     elif(seleccion == 5):
         directorios = Path.Path(4)
         analisiPorUsuario()
-
+    elif(seleccion == 6):
+        directorios = Path.Path(4)
+        analisiPorUsuario()
+        analisisPorGenero()
     else:
         print("Aún no esta disponible esta opción")
         main()
