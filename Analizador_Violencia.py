@@ -94,6 +94,11 @@ def analisisPorGenero():
                 resgeneros['bigramas'][v.genero][l[1]] = resgeneros['bigramas'][v.genero][l[1]] + l[0]
             else:
                 resgeneros['bigramas'][v.genero][l[1]] = l[0]
+        for l in extraeN(v.posts, 3):
+            if l[1] in resgeneros['trigramas'][v.genero]:
+                resgeneros['trigramas'][v.genero][l[1]] = resgeneros['trigramas'][v.genero][l[1]] + l[0]
+            else:
+                resgeneros['trigramas'][v.genero][l[1]] = l[0]
     with open(directorios.sgen, 'w', newline='') as csvfile:
         fieldnames = ['Genero', 'Vocablo', 'Frecuencia']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -101,13 +106,20 @@ def analisisPorGenero():
         for k in resgeneros['unigramas'].keys():
             for p in resgeneros['unigramas'][k].keys():
                 writer.writerow({'Genero':k,'Vocablo':p, 'Frecuencia':resgeneros['unigramas'][k][p]})
-    with open(directorios.sbigen, 'w', newline='') as csvfile:
-        fieldnames = ['Genero', 'Bigrama', 'Frecuencia']
+    csvfile = open(directorios.sbigen, 'w', newline='')
+    fieldnames = ['Genero', 'Bigrama', 'Frecuencia']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for k in resgeneros['bigramas'].keys():
+        for p in resgeneros['bigramas'][k].keys():
+            writer.writerow({'Genero':k,'Bigrama':p, 'Frecuencia':resgeneros['bigramas'][k][p]})
+    with open(directorios.strigen, 'w', newline='') as csvfile:
+        fieldnames = ['Genero', 'Trigrama', 'Frecuencia']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
-        for k in resgeneros['bigramas'].keys():
-            for p in resgeneros['bigramas'][k].keys():
-                writer.writerow({'Genero':k,'Bigrama':p, 'Frecuencia':resgeneros['bigramas'][k][p]})
+        for k in resgeneros['trigramas'].keys():
+            for p in resgeneros['trigramas'][k].keys():
+                writer.writerow({'Genero':k,'Trigrama':p, 'Frecuencia':resgeneros['trigramas'][k][p]})
 
 
 
