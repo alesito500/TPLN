@@ -54,9 +54,13 @@ def extraeUNI(archivo, sw = False):
 
 def analisiPorUsuario():
     csvfile = open(directorios.entrada)
+    print("Entrada ", directorios.entrada, "\n")
     leeCSV = csv.reader(csvfile, delimiter=';')
     for row in leeCSV:
-        (uid, respuesta) = (row[0], [row[2]])
+        try:
+            (uid, respuesta) = (row[0], [row[2]])
+        except IndexError:
+            (uid, respuesta) = (row[0], [""])
         respuestas.newUser(uid, respuesta)
         respuestas.UserGenre(uid, row[1])
     respuestas.loadVocabulary()
@@ -266,6 +270,8 @@ def menu():
     instrucciones += "\n(\t4\t)\tAnalizar las respuestas de las encuestas de febrero sin palabras funcionales"
     instrucciones += "\n(\t5\t)\tAnalizar las respuestas de las encuestas de febrero por usuarios, sin palabras funcionales"
     instrucciones += "\n(\t6\t)\tAnalizar las respuestas de las encuestas de febrero por género, sin palabras funcionales"
+    instrucciones += "\n(\t7\t)\tAnalizar las respuestas de las encuestas de mayo sin palabras funcionales"
+    instrucciones += "\n(\t8\t)\tAnalizar las respuestas de las encuestas de mayo por género, sin palabras funcionales"
     instrucciones += "\n(\t#\t)\tAnalizar la matriz conceptual"
     instrucciones += "\n(\t#\t)\tAnalizar un archivo en específico"
     instrucciones += "\n:__"
@@ -300,6 +306,17 @@ def main():
     elif(seleccion == 6):
         directorios = Path.Path(4)
         analisiPorUsuario()
+        analisisPorGenero()
+    elif(seleccion == 7):
+        directorios = Path.Path(5)
+        defecto(True)
+    elif(seleccion == 8):
+        print("\nElegiste la opción 8")
+        directorios = Path.Path(6)
+        print("\nDirectorios cargados")
+        print("\nAnalisis por usuario")
+        analisiPorUsuario()
+        print("\nAnalisis por género")
         analisisPorGenero()
     else:
         print("Aún no esta disponible esta opción")

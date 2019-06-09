@@ -9,6 +9,10 @@ class Path:
             self.feb19()
         elif(opcion == 4):
             self.feb19(4)
+        elif(opcion == 5):
+            self.may19()
+        elif(opcion == 6):
+            self.may19(6)
         else:
             pass
         pass
@@ -47,3 +51,27 @@ class Path:
             self.strigen = 'Corpus/Test_feb19/Salida/Stats/s_tri_genero.csv'
             self.sbig = 'Corpus/Test_feb19/Salida/Graph/grafo_bi_genero.csv'
             self.strig = 'Corpus/Test_feb19/Salida/Graph/grafo_tri_genero.csv'
+            
+
+    def may19(self, opcion=5):
+        if(opcion == 5):
+            self.entrada = 'Corpus/Mayo19/resglobal.txt'
+            self.suni = 'Corpus/Mayo19/Salida/Stats/uni_general.csv'
+            self.sbi = 'Corpus/Mayo19/Salida/Stats/bi_general.csv'
+            self.stri = 'Corpus/Mayo19/Salida/Stats/tri_general.csv'
+            self.sbig = 'Corpus/Mayo19/Salida/Graph/grafo_bi_general.csv'
+            self.strig = 'Corpus/Mayo19/Salida/Graph/grafo_tri_general.csv'
+        else:
+            self.entrada = 'Corpus/Mayo19/Respuestas_vT.csv'
+            self.suni = 'Corpus/Mayo19/Salida/Stats/uni_porusuario.csv'
+            self.sidlp = 'Corpus/Mayo19/Salida/Stats/idlp_general.csv'
+            self.sgen = 'Corpus/Mayo19/Salida/Stats/s_genero.csv'
+            self.sbigen = 'Corpus/Mayo19/Salida/Stats/s_bi_genero.csv'
+            self.strigen = 'Corpus/Mayo19/Salida/Stats/s_tri_genero.csv'
+            self.sbig = 'Corpus/Mayo19/Salida/Graph/grafo_bi_genero.csv'
+            self.strig = 'Corpus/Mayo19/Salida/Graph/grafo_tri_genero.csv'
+
+
+    def baseline(self, opcion=7):
+        self.entrada = 'Corpus/BaseLine/CorpusVdeG.csv'
+        self.suni = 'Corpus/BaseLine/Salida/Stats/uni_general.csv'
