@@ -14,7 +14,7 @@ class Path:
         elif(opcion == 6):
             self.may19(6)
         else:
-            pass
+            self.baseline()
         pass
 
     def piloto(self, opcion=1):
@@ -51,7 +51,7 @@ class Path:
             self.strigen = 'Corpus/Test_feb19/Salida/Stats/s_tri_genero.csv'
             self.sbig = 'Corpus/Test_feb19/Salida/Graph/grafo_bi_genero.csv'
             self.strig = 'Corpus/Test_feb19/Salida/Graph/grafo_tri_genero.csv'
-            
+
 
     def may19(self, opcion=5):
         if(opcion == 5):
@@ -72,6 +72,10 @@ class Path:
             self.strig = 'Corpus/Mayo19/Salida/Graph/grafo_tri_genero.csv'
 
 
-    def baseline(self, opcion=7):
+    def baseline(self):
         self.entrada = 'Corpus/BaseLine/CorpusVdeG.csv'
         self.suni = 'Corpus/BaseLine/Salida/Stats/uni_general.csv'
+        self.sbi = 'Corpus/BaseLine/Salida/Stats/bi_general.csv'
+        self.stri = 'Corpus/BaseLine/Salida/Stats/tri_general.csv'
+        self.sbig = 'Corpus/BaseLine/Salida/Graph/grafo_bi_general.csv'
+        self.strig = 'Corpus/BaseLine/Salida/Graph/grafo_tri_general.csv'

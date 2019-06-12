@@ -272,7 +272,7 @@ def menu():
     instrucciones += "\n(\t6\t)\tAnalizar las respuestas de las encuestas de febrero por género, sin palabras funcionales"
     instrucciones += "\n(\t7\t)\tAnalizar las respuestas de las encuestas de mayo sin palabras funcionales"
     instrucciones += "\n(\t8\t)\tAnalizar las respuestas de las encuestas de mayo por género, sin palabras funcionales"
-    instrucciones += "\n(\t#\t)\tAnalizar la matriz conceptual"
+    instrucciones += "\n(\t9\t)\tAnalizar la matriz conceptual"
     instrucciones += "\n(\t#\t)\tAnalizar un archivo en específico"
     instrucciones += "\n:__"
     seleccion = 1
@@ -318,6 +318,9 @@ def main():
         analisiPorUsuario()
         print("\nAnalisis por género")
         analisisPorGenero()
+    elif(seleccion == 9):
+        directorios = Path.Path(7)
+        defecto(True)
     else:
         print("Aún no esta disponible esta opción")
         main()
